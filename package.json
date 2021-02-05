@@ -1,0 +1,16 @@
+{
+  "name": "k8s-microservices-version",
+  "version": "1.0.0",
+  "description": "show version of all microservices",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "author": "mebnoah",
+  "license": "MIT",
+  "dependencies": {
+    "async": "^3.2.0",
+    "body-parser": "^1.18.3",
+    "express": "^4.16.3"
+  }
+}
