@@ -23,7 +23,7 @@ spec:
         image: bpsmsconhubconreg.azurecr.io/k8s-services-version:latest
         imagePullPolicy: "Always"
         ports:
-        - containerPort: 80
+        - containerPort: 3000
         resources:
           requests:
             memory: "250M"
@@ -32,11 +32,15 @@ spec:
             memory: "500M"
             cpu: "250m"
         env:
-        - name: SERVICE_ADDRESS
-          value: "https://my308142.crm.ondemand.com/"
+        - name: K8S_SERVICE_ENDPOINT_STORAGE
+          value: "http://storage-api-service.construction-hub.svc.cluster.local/api/info"
+        - name: K8S_SERVICE_ENDPOINT_BUILDINGRADAR
+          value: "http://buildingradar-api-service.construction-hub.svc.cluster.local/api/info"
+        - name: K8S_SERVICE_ENDPOINT_UI_API
+          value: "http://ui-api-service.construction-hub.svc.cluster.local/api/info"
         livenessProbe:
           httpGet:
-            path: /api/versions
+            path: /versions
             port: 80
           initialDelaySeconds: 30
           periodSeconds: 60
@@ -58,26 +62,10 @@ metadata:
   labels:
     app: k8s-services-version-app
 spec:
+  type: LoadBalancer
   ports:
   - port: 80
     protocol: TCP
-    targetPort: 80
+    targetPort: 3000
   selector:
     app: k8s-services-version-app
----
-apiVersion: extensions/v1beta1
-kind: Ingress
-metadata:
-  name: k8s-services-version-app-ingress
-  namespace: construction-hub
-  annotations:
-    kubernetes.io/ingress.class: azure/application-gateway
-spec:
-  rules:
-  - host: orbisconstructionhubncademo.orbis.de
-    http:
-      paths:
-      - path: /version
-        backend:
-          serviceName: k8s-services-version-service
-          servicePort: 80
