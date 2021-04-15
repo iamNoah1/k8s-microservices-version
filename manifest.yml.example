@@ -2,7 +2,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: k8s-services-version-deployment
-  namespace: construction-hub
   labels:
     tier: backend
     app: k8s-services-version-app
@@ -20,7 +19,7 @@ spec:
       terminationGracePeriodSeconds: 30
       containers:
       - name: k8s-services-version-app
-        image: bpsmsconhubconreg.azurecr.io/k8s-services-version:latest
+        image: iamnoah4real/k8s-microservices-versions
         imagePullPolicy: "Always"
         ports:
         - containerPort: 3000
@@ -32,33 +31,21 @@ spec:
             memory: "500M"
             cpu: "250m"
         env:
-        - name: K8S_SERVICE_ENDPOINT_STORAGE
-          value: "http://storage-api-service.construction-hub.svc.cluster.local/api/info"
-        - name: K8S_SERVICE_ENDPOINT_BUILDINGRADAR
-          value: "http://buildingradar-api-service.construction-hub.svc.cluster.local/api/info"
-        - name: K8S_SERVICE_ENDPOINT_UI_API
-          value: "http://ui-api-service.construction-hub.svc.cluster.local/api/info"
+        - name: K8S_SERVICE_ENDPOINT_SERVICE1
+          value: "<url-of-service-version-endpoint>"
         livenessProbe:
           httpGet:
             path: /versions
-            port: 80
+            port: 3000
           initialDelaySeconds: 30
           periodSeconds: 60
           timeoutSeconds: 30
           failureThreshold: 2
-      tolerations:
-      - key: "env"
-        operator: "Equal"
-        value: "conhub"
-        effect: "NoSchedule"
-      imagePullSecrets:
-      - name: acr-secret
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: k8s-services-version-service
-  namespace: construction-hub
   labels:
     app: k8s-services-version-app
 spec:
