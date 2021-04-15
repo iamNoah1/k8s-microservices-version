@@ -19,7 +19,7 @@ spec:
       terminationGracePeriodSeconds: 30
       containers:
       - name: k8s-services-version-app
-        image: iamnoah4real/k8s-microservices-versions
+        image: iamnoah4real/k8s-microservices-version
         imagePullPolicy: "Always"
         ports:
         - containerPort: 3000
